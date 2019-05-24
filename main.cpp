@@ -3,10 +3,11 @@
 #include "Scene.h"
 #include "Camera.h"
 #include "Renderer.h"
+#include "gltf.h"
 
 int main(){
 
-	std::vector<glm::vec3> verts = {
+	/*std::vector<glm::vec3> verts = {
 		glm::vec3(-1., -1., -1.),
 		glm::vec3(1., -1., -1.),
 		glm::vec3(-1., 1., -1.),
@@ -42,5 +43,14 @@ int main(){
 
 	Renderer* renderer = new Renderer(scene, camera, 640, 480);
 
-	renderer->render();
+	renderer->render();*/
+
+    Scene* scene = import_gltf("/home/oliver/sample.gltf");
+
+    Camera* camera = new Camera(60.f, 640, 480, glm::vec3(3.0, 6.0, -5.0) , glm::vec3(0), glm::vec3(0.0, 1.0, 0.0));
+
+    Renderer* renderer = new Renderer(scene, camera, 640, 480);
+
+    renderer->render();
+
 }

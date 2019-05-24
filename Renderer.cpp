@@ -2,6 +2,7 @@
 #include "Ray.h"
 #include "Image.h"
 #include <glm/gtc/matrix_transform.hpp>
+#include <iostream>
 
 Renderer::Renderer(Scene* scene, Camera* camera, unsigned int x_res, unsigned int y_res){
 	this->scene = scene;
@@ -18,6 +19,10 @@ void Renderer::render(){
 	for(unsigned int i = 0; i < this->x_res*this->y_res; i++){
 		int x = i%x_res;
 		int y = i/x_res;
+
+        if( i % 20 == 0){
+            std::cout << "Rendering " << i << "/" << this->x_res*this->y_res << "\r"<<std::flush;
+        }
 		
 		glm::vec3 nearPlanePos = glm::unProject(glm::vec3(x, y, 0), this->camera->view, this->camera->projection, glm::vec4(0.0,0.0,x_res, y_res));
         glm::vec3 farPlanePos = glm::unProject(glm::vec3(x, y, 1), this->camera->view, this->camera->projection, glm::vec4(0.0, 0.0, x_res, y_res));

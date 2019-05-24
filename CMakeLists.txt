@@ -1,6 +1,9 @@
 cmake_minimum_required(VERSION 3.0 FATAL_ERROR)
 project(drt)
 
+include_directories(extern/include/)
+
+
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/Modules")
 
 find_package(glm REQUIRED)
@@ -8,6 +11,7 @@ find_package(glm REQUIRED)
 find_package(OpenImageIO REQUIRED)
 include_directories(${OPENIMAGEIO_INCLUDE_DIRS})
 link_directories(${OPENIMAGEIO_LIBRARIES})
+
 
 set(SOURCE_FILES
         main.cpp
@@ -22,6 +26,10 @@ set(SOURCE_FILES
         Ray.h
         Image.h
         Image.cpp
+        gltf.h
+        gltf.cpp
+        BVH.h
+        BVH.cpp
         )
 
 
