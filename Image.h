@@ -7,9 +7,9 @@
 
 class Image{
 public:
-  int width;
-  int height;
+  unsigned int width;
+  unsigned int height;
   std::vector<glm::vec4> pixels;
-  Image(int width, int height);
+  Image(unsigned int width, unsigned int height);
   bool save(std::string path);
 };

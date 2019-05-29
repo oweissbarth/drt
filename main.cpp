@@ -4,6 +4,12 @@
 #include "Camera.h"
 #include "Renderer.h"
 #include "gltf.h"
+#include "preview/Preview.h"
+
+#include <glm/gtx/string_cast.hpp>
+
+
+#include <iostream>
 
 int main(){
 
@@ -51,6 +57,18 @@ int main(){
 
     Renderer* renderer = new Renderer(scene, camera, 640, 480);
 
+
+   /* Preview p = Preview();
+
+    for (unsigned long i = 0; i < scene->objects.size(); i++) {        
+        p.add(scene->objects[i]->get_preview());
+    }
+
+    p.add(renderer->bvh->get_preview());*/
     renderer->render();
+
+    //p.draw();
+
+
 
 }

@@ -1,11 +1,16 @@
-#ifndef BVH_H
-#define BVH_H
+#pragma once
 
+#include <vector>
+#include "BVHNode.h"
+#include "Scene.h"
+#include "Intersection.h"
+#include "preview/PreviewLines.h"
 
 class BVH
 {
 public:
-    BVH();
+    BVH(Scene* scene);
+    BVHNode* root;
+    Intersection* traverse(Ray* ray);
+    PreviewLines* get_preview();
 };
-
-#endif // BVH_H

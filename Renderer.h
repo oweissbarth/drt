@@ -2,6 +2,7 @@
 
 #include "Scene.h"
 #include "Camera.h"
+#include "BVH.h"
 
 class Renderer{
 private:
@@ -12,4 +13,6 @@ private:
 public:
 	Renderer(Scene* scene, Camera* camera, unsigned int x_res, unsigned int y_res);
 	void render();
+    BVH* bvh;
+
 };

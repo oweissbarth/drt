@@ -3,12 +3,15 @@
 #include "Image.h"
 #include <glm/gtc/matrix_transform.hpp>
 #include <iostream>
+#include "Intersection.h"
 
 Renderer::Renderer(Scene* scene, Camera* camera, unsigned int x_res, unsigned int y_res){
 	this->scene = scene;
 	this->camera = camera;
 	this->x_res = x_res;
 	this->y_res = y_res;
+
+    this->bvh = new BVH(this->scene);
 }
 
 void Renderer::render(){
@@ -16,9 +19,10 @@ void Renderer::render(){
     Image* result = new Image(this->x_res, this->y_res);
 
 
+
 	for(unsigned int i = 0; i < this->x_res*this->y_res; i++){
-		int x = i%x_res;
-		int y = i/x_res;
+        unsigned int x = i%x_res;
+        unsigned int y = i/x_res;
 
         if( i % 20 == 0){
             std::cout << "Rendering " << i << "/" << this->x_res*this->y_res << "\r"<<std::flush;
@@ -29,26 +33,9 @@ void Renderer::render(){
 
         Ray* ray = new Ray(camera->position, glm::normalize(farPlanePos-nearPlanePos));
         
-        float minDistance = 999999999.f;
-        glm::vec3 closest_intersection;
-        bool found = false;
-        
-        for(int i = 0; i < scene->objects.size(); i++){
-            bool foundIntersection = false;
-            glm::vec3 intersection;
-            glm::vec3 normal;
-            scene->objects[i]->intersect(ray, &intersection, &normal, &foundIntersection);
-            
-            found = found or foundIntersection;
-            
-            float distance = glm::distance(ray->origin, intersection);
-            
-            if(foundIntersection and distance < minDistance){
-                minDistance = distance;
-                closest_intersection = intersection;
-            }
-        }
-        if(found){
+        Intersection* intersection = bvh->traverse(ray);
+
+        if(intersection != nullptr){
             result->pixels[i] = glm::vec4(1.0, 0.,0., 1.0);
         }else{
             result->pixels[i] = glm::vec4(0., 0.,0., 1.0);

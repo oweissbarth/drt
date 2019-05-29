@@ -3,7 +3,7 @@
 
 OIIO_NAMESPACE_USING
 
-Image::Image(int width, int height){
+Image::Image(unsigned int width, unsigned int height){
     this->pixels.resize(width*height);
     this->width = width;
     this->height = height;

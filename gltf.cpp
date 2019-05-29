@@ -67,7 +67,6 @@ Scene* import_gltf(std::string path){
 
             std::vector<glm::vec3> positions(position_bytes, position_bytes + position_buffer_length);
 
-            std::cout << positions[0].x << ", " << positions[0].y << ", " << positions[0].z << std::endl;
 
             unsigned long face_buffer_offset = face_buffer_view["byteOffset"];
             unsigned long face_buffer_length = face_buffer_view["byteLength"];
