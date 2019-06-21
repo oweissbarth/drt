@@ -15,8 +15,8 @@ uniform mat4 normal_mat;
 
 void main() {
     vec3 ambientLight = vec3(0.6, 0.6, 0.6);
-    vec3 directionalLightColor = vec3(0.5, 0.5, 0.75);
-    vec3 directionalVector = vec3(0.85, 0.8, 0.75);
+    vec3 directionalLightColor = vec3(0.5, 0.5, 0.5);
+    vec3 directionalVector = vec3(300, 300, 300);
 
     vec4 transformedNormal = normal_mat * vec4(normal, 1.0);
 

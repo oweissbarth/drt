@@ -23,6 +23,7 @@ private:
     glm::mat4 viewMatrix;
 
     glm::quat rotation = glm::angleAxis(0.f, glm::vec3(0,0,1));
+    double distance;
 
     glm::vec2 cursor_pos;
     bool rotating = false;
@@ -31,5 +32,7 @@ private:
 
     static void handle_mouse_button(GLFWwindow* window, int button, int action, int mods);
     static void handle_mouse_move(GLFWwindow* window, double xpos, double ypos);
+    static void handle_mouse_scroll(GLFWwindow* window, double xoffset, double yoffset);
+
 };
 

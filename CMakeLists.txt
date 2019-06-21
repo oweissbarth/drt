@@ -10,6 +10,8 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/Modules")
 
 find_package(glm REQUIRED)
 
+find_package(openshading )
+
 find_package(OpenImageIO REQUIRED)
 include_directories(${OPENIMAGEIO_INCLUDE_DIRS})
 link_directories(${OPENIMAGEIO_LIBRARIES})
@@ -29,10 +31,18 @@ set(SOURCE_FILES
         Image.cpp
         gltf.h
         gltf.cpp
-        BVH.h
         BVH.cpp
-        BVHNode.h
+        BVH.h
         BVHNode.cpp
+        BVHNode.h
+        MeshBVH.h
+        MeshBVH.cpp
+        MeshBVHNode.h
+        MeshBVHNode.cpp
+        SceneBVH.h
+        SceneBVH.cpp
+        SceneBVHNode.cpp
+        SceneBVHNode.h
         AABB.h
         AABB.cpp
         utils.h

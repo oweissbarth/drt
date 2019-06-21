@@ -6,9 +6,9 @@
 class Intersection
 {
 public:
-    Intersection(glm::vec3 position, Object* object, unsigned long face_index, float distance);
+    Intersection(glm::vec3 position, Mesh* object, unsigned long face_index, float distance);
     glm::vec3 position;
-    Object* object;
+    Mesh* object;
     unsigned long face_index;
     float distance;
 };

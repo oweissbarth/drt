@@ -61,9 +61,11 @@ Preview::Preview()
     glfwSwapInterval(1);
 
     float aspectratio = (float)width/(float)height;
-    std::cout << "aspect ratio" << aspectratio << std::endl;
-    projectionMatrix= glm::perspective(fov*3.14f/180.f, aspectratio , 1.f, 50.0f);
-    viewMatrix = glm::lookAt(glm::vec3(0.0, 0.0, 10.0), glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));
+
+    distance = 10.;
+
+    projectionMatrix= glm::perspective(fov*3.14f/180.f, aspectratio , 1.f, 5000.0f);
+    viewMatrix = glm::lookAt(glm::vec3(0.0, 0.0, distance), glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));
 
 
     glEnable(GL_DEBUG_OUTPUT);
@@ -136,10 +138,21 @@ void Preview::handle_mouse_move(GLFWwindow *window, double xpos, double ypos){
 
 }
 
+void Preview::handle_mouse_scroll(GLFWwindow* window, double xoffset, double yoffset){
+    Preview* p = static_cast<Preview*>(glfwGetWindowUserPointer(window));
+
+    p->distance -= 3*yoffset;
+
+    p->viewMatrix = glm::lookAt(glm::vec3(0.0, 0.0, p->distance), glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));
+
+}
+
 void Preview::draw(){
 
     glfwSetMouseButtonCallback(window, handle_mouse_button);
     glfwSetCursorPosCallback(window, handle_mouse_move);
+    glfwSetScrollCallback(window, handle_mouse_scroll);
+
 
     std::cout << glm::to_string(projectionMatrix) << std::endl;
 

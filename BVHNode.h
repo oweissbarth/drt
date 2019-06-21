@@ -1,28 +1,24 @@
 #pragma once
 
-#include "AABB.h"
-#include "Object.h"
 #include "Intersection.h"
-#include <vector>
-
+#include "AABB.h"
 
 class BVHNode
 {
 public:
-    BVHNode(std::vector<glm::uvec3> faces, std::vector<unsigned long> face_indices, std::vector<Object*> objects);
+    //BVHNode();
+
+    virtual ~BVHNode() {}
+
+    Intersection* traverse(Ray* ray);
+
+    virtual Intersection* intersect_content(Ray* ray) = 0;
+
+    void get_preview(std::vector<glm::vec3>* verts);
+
     AABB* aabb;
     std::vector<BVHNode*> children;
     bool is_leaf;
 
-    std::vector<glm::uvec3> faces;
-    std::vector<unsigned long> face_indices;
-    std::vector<Object*> objects;
-
-    Intersection* traverse(Ray* ray);
-
-    void get_preview(std::vector<glm::vec3>* verts);
-
-private:
-    void split();
-    Intersection* intersect_faces(Ray* ray);
+    const unsigned int child_count = 4;
 };

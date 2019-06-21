@@ -13,6 +13,7 @@ private:
 public:
 	Renderer(Scene* scene, Camera* camera, unsigned int x_res, unsigned int y_res);
 	void render();
+    void trace(Ray* ray, int depth, glm::vec3* radiosity);
     BVH* bvh;
 
 };

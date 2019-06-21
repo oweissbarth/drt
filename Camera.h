@@ -1,18 +1,20 @@
 #pragma once
 
+#include "Object.h"
+
 #include <glm/glm.hpp>
 
-class Camera{
+
+class Camera: public Object{
 private:
 
-	float fov;
-	float near_clip = 0.01;
-	float far_clip = 100;
-	unsigned int width;
-	unsigned int height;
 public:
-	Camera(float fov, unsigned int width, unsigned int height, glm::vec3 position, glm::vec3 up, glm::vec3 forward);
-  	glm::vec3 position;
-	glm::mat4 view;
-	glm::mat4 projection;
+    Camera(float fov, float znear, float zfar, glm::vec3 pos = glm::vec3(0), glm::quat rot = glm::quat(), glm::vec3 scale = glm::vec3(1));
+    //Camera(float fov, unsigned int width, unsigned int height, glm::vec3 position, glm::vec3 up, glm::vec3 forward);
+
+    float fov;
+    float near_clip = 0.01;
+    float far_clip = 100;
+    unsigned int width;
+    unsigned int height;
 };
