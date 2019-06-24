@@ -22,3 +22,42 @@ Camera::Camera(float fov, float znear, float zfar, glm::vec3 pos, glm::quat rot,
     this->far_clip = zfar;
 }
 
+PreviewLines *Camera::get_preview()
+{
+    std::vector<glm::vec3> verts;
+
+    float scale = 50.f;
+
+    verts.push_back(location);
+    verts.push_back(location + glm::vec3(tan(fov/2)*scale, tan(fov/2)*scale, -scale));
+
+
+    verts.push_back(location);
+    verts.push_back(location + glm::vec3(-tan(fov/2)*scale, tan(fov/2)*scale, -scale));
+
+
+    verts.push_back(location);
+    verts.push_back(location + glm::vec3(tan(fov/2)*scale, -tan(fov/2)*scale, -scale));
+
+
+    verts.push_back(location);
+    verts.push_back(location + glm::vec3(-tan(fov/2)*scale, -tan(fov/2)*scale, -scale));
+
+
+    verts.push_back(location + glm::vec3(-tan(fov/2)*scale, -tan(fov/2)*scale, -scale));
+    verts.push_back(location + glm::vec3( tan(fov/2)*scale, -tan(fov/2)*scale, -scale));
+
+    verts.push_back(location + glm::vec3( tan(fov/2)*scale, -tan(fov/2)*scale, -scale));
+    verts.push_back(location + glm::vec3( tan(fov/2)*scale,  tan(fov/2)*scale, -scale));
+
+    verts.push_back(location + glm::vec3( tan(fov/2)*scale,  tan(fov/2)*scale, -scale));
+    verts.push_back(location + glm::vec3(-tan(fov/2)*scale,  tan(fov/2)*scale, -scale));
+
+    verts.push_back(location + glm::vec3(-tan(fov/2)*scale,  tan(fov/2)*scale, -scale));
+    verts.push_back(location + glm::vec3(-tan(fov/2)*scale, -tan(fov/2)*scale, -scale));
+
+
+
+    return new PreviewLines(verts, get_matrix());
+}
+

@@ -3,6 +3,8 @@
 #include <iostream>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/matrix_access.hpp>
+#include <glm/gtx/transform.hpp>
+
 
 #include <glm/gtx/string_cast.hpp>
 void error_callback(int error, const char* description)
@@ -62,7 +64,7 @@ Preview::Preview()
 
     float aspectratio = (float)width/(float)height;
 
-    distance = 10.;
+    distance = 200.;
 
     projectionMatrix= glm::perspective(fov*3.14f/180.f, aspectratio , 1.f, 5000.0f);
     viewMatrix = glm::lookAt(glm::vec3(0.0, 0.0, distance), glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));
@@ -141,9 +143,32 @@ void Preview::handle_mouse_move(GLFWwindow *window, double xpos, double ypos){
 void Preview::handle_mouse_scroll(GLFWwindow* window, double xoffset, double yoffset){
     Preview* p = static_cast<Preview*>(glfwGetWindowUserPointer(window));
 
-    p->distance -= 3*yoffset;
+    p->distance -= 10*yoffset;
 
     p->viewMatrix = glm::lookAt(glm::vec3(0.0, 0.0, p->distance), glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));
+
+}
+
+void Preview::handle_keyboard(GLFWwindow *window, int key, int scancode, int action, int mods)
+{
+
+    Preview* p = static_cast<Preview*>(glfwGetWindowUserPointer(window));
+
+    glm::vec3 motion(0);
+    if (key == GLFW_KEY_W && (action == GLFW_REPEAT || action == GLFW_PRESS)){
+        motion = glm::vec3(0, 0, 1);
+    }else if (key == GLFW_KEY_S && (action == GLFW_REPEAT || action == GLFW_PRESS)){
+        motion = glm::vec3(0, 0, -1);
+    }else if (key == GLFW_KEY_A && (action == GLFW_REPEAT || action == GLFW_PRESS)){
+        motion = glm::vec3(1, 0, 0);
+    }else if (key == GLFW_KEY_D && (action == GLFW_REPEAT || action == GLFW_PRESS)){
+        motion = glm::vec3(-1, 0, 0);
+    }else if (key == GLFW_KEY_E && (action == GLFW_REPEAT || action == GLFW_PRESS)){
+        motion = glm::vec3(0, 1, 0);
+    }else if (key == GLFW_KEY_Q && (action == GLFW_REPEAT || action == GLFW_PRESS)){
+        motion = glm::vec3(0, -1, 0);
+    }
+    p->position += 10.f*motion;
 
 }
 
@@ -152,6 +177,8 @@ void Preview::draw(){
     glfwSetMouseButtonCallback(window, handle_mouse_button);
     glfwSetCursorPosCallback(window, handle_mouse_move);
     glfwSetScrollCallback(window, handle_mouse_scroll);
+    glfwSetKeyCallback(window, handle_keyboard);
+
 
 
     std::cout << glm::to_string(projectionMatrix) << std::endl;
@@ -165,6 +192,8 @@ void Preview::draw(){
         glm::mat4 rot = glm::mat4_cast(rotation);
 
         //std::cout << glm::to_string(rotation) <<std::endl;
+
+        viewMatrix = glm::translate(position);
 
         for (unsigned long i = 0; i < objects.size(); i++) {
             objects[i]->draw(projectionMatrix, viewMatrix*rot);

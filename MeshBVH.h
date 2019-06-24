@@ -7,7 +7,7 @@
 #include "preview/PreviewLines.h"
 #include "BVH.h"
 
-class MeshBVH: public BVH
+class MeshBVH
 {
 public:
     MeshBVH(Mesh* mesh);
@@ -20,6 +20,9 @@ public:
     glm::mat4 inv_transform;
 
     Mesh* mesh;
+    MeshBVHNode* root;
 
     Intersection * traverse(Ray *ray);
+    void get_preview(std::vector<glm::vec3>* verts);
+
 };

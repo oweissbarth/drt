@@ -19,8 +19,6 @@ Mesh::Mesh(std::vector<glm::vec3> vertices, std::vector<glm::uvec3> faces, std::
 
     this->color = glm::vec3(r,g,b);
 
-
-    std::cout << "mesh :"  << meshname << " color: " << glm::to_string(color) << std::endl;
 }
 
 
@@ -89,12 +87,16 @@ glm::mat4 Object::get_matrix()
 
     glm::mat4 modelMatrix = translation * rotation * scale;
 
-
     if(this->parent != nullptr){
         return this->parent->get_matrix() * modelMatrix;
     }else{
         return modelMatrix;
     }
+}
+
+glm::vec3 Object::get_location()
+{
+    return glm::vec3(get_matrix()* glm::vec4(location, 1.0));
 }
 
 glm::vec3 Mesh::get_mean()

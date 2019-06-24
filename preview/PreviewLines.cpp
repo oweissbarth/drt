@@ -1,8 +1,9 @@
 #include "PreviewLines.h"
 
-PreviewLines::PreviewLines(std::vector<glm::vec3> verts)
+PreviewLines::PreviewLines(std::vector<glm::vec3> verts, glm::mat4 transform)
 {
     this->vertices = verts;
+    this->modelMatrix = transform;
 
     this->update_shader("simple");
     this->retrieve_locations();
@@ -13,7 +14,6 @@ PreviewLines::PreviewLines(std::vector<glm::vec3> verts)
 }
 
 void PreviewLines::draw(glm::mat4 projection, glm::mat4 view){
-    this->modelMatrix = glm::mat4(1.0);
     this->viewMatrix = view;
     this->projectionMatrix = projection;
     this->modelViewMatrix =  viewMatrix * modelMatrix;

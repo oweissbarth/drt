@@ -53,3 +53,57 @@ bool AABB::intersect(Ray* ray){
 
         return tmax > max(tmin, 0.0f);
 }
+
+void AABB::get_preview(std::vector<glm::vec3>* verts){
+    float minx = this->min.x;
+    float miny = this->min.y;
+    float minz = this->min.z;
+
+    float maxx = this->max.x;
+    float maxy = this->max.y;
+    float maxz = this->max.z;
+
+    //bottom
+    verts->push_back(glm::vec3(minx, miny, minz));
+    verts->push_back(glm::vec3(maxx, miny, minz));
+
+    verts->push_back(glm::vec3(maxx, miny, minz));
+    verts->push_back(glm::vec3(maxx, maxy, minz));
+
+    verts->push_back(glm::vec3(maxx, maxy, minz));
+    verts->push_back(glm::vec3(minx, maxy, minz));
+
+    verts->push_back(glm::vec3(minx, maxy, minz));
+    verts->push_back(glm::vec3(minx, miny, minz));
+
+
+    //top
+    verts->push_back(glm::vec3(minx, miny, maxz));
+    verts->push_back(glm::vec3(maxx, miny, maxz));
+
+    verts->push_back(glm::vec3(maxx, miny, maxz));
+    verts->push_back(glm::vec3(maxx, maxy, maxz));
+
+    verts->push_back(glm::vec3(maxx, maxy, maxz));
+    verts->push_back(glm::vec3(minx, maxy, maxz));
+
+    verts->push_back(glm::vec3(minx, maxy, maxz));
+    verts->push_back(glm::vec3(minx, miny, maxz));
+
+    //sides
+
+    verts->push_back(glm::vec3(minx, miny, minz));
+    verts->push_back(glm::vec3(minx, miny, maxz));
+
+    verts->push_back(glm::vec3(minx, maxy, minz));
+    verts->push_back(glm::vec3(minx, maxy, maxz));
+
+    verts->push_back(glm::vec3(maxx, miny, minz));
+    verts->push_back(glm::vec3(maxx, miny, maxz));
+
+    verts->push_back(glm::vec3(maxx, maxy, minz));
+    verts->push_back(glm::vec3(maxx, maxy, maxz));
+
+
+
+}

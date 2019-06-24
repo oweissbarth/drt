@@ -21,7 +21,6 @@ public:
     void get_preview(std::vector<glm::vec3>* verts);
 
     AABB* aabb;
-    std::vector<BVHNode*> children;
     bool is_leaf;
 
     const unsigned int child_count = 4;

@@ -19,6 +19,7 @@ public:
     }
 
     glm::mat4 get_matrix();
+    glm::vec3 get_location();
 
 
     virtual ~Object() = default;

@@ -31,6 +31,40 @@ MeshBVHNode::MeshBVHNode(std::vector<glm::uvec3> faces, std::vector<unsigned lon
     }
 }
 
+Intersection* MeshBVHNode::traverse(Ray* ray){
+
+    std::cout << "checking if we are hitting " << object->name << std::endl;
+
+    if(!this->aabb->intersect(ray)){
+        return nullptr;
+    }
+    std::cout << "hit aabb of " << object->name << std::endl;
+
+    if(this->is_leaf){
+        return this->intersect_content(ray);
+    }
+
+    // NOTE this is naivly checking every child
+    Intersection* bestIntersection = nullptr;
+    for (unsigned long k = 0; k < this->child_count; k++) {
+        Intersection* intersection = this->children[k]->traverse(ray);
+        if(intersection != nullptr and (bestIntersection == nullptr or intersection->distance < bestIntersection->distance)){
+            bestIntersection = intersection;
+        }
+
+    }
+    return bestIntersection;
+}
+
+void MeshBVHNode::get_preview(std::vector<glm::vec3> *verts)
+{
+    aabb->get_preview(verts);
+    for (unsigned int i = 0; i < children.size(); i++) {
+        children[i]->get_preview(verts);
+    }
+}
+
+
 void MeshBVHNode::split(){
     std::vector<glm::vec3> faces_means(this->faces.size());
     for(unsigned long i = 0; i < faces.size(); i++){

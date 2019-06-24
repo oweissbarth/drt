@@ -35,9 +35,32 @@ SceneBVHNode::SceneBVHNode(std::vector<Mesh*> meshes)
     }else{
         this->is_leaf = true;
         for (unsigned int i = 0; i < meshes.size(); i++) {
+            std::cout << "created mesh bvh " << meshes[i]->name << std::endl;
             mesh_bvhs.push_back(new MeshBVH(meshes[i]));
+
         }
     }
+}
+
+Intersection* SceneBVHNode::traverse(Ray* ray){
+    if(!this->aabb->intersect(ray)){
+        return nullptr;
+    }
+
+    if(this->is_leaf){
+        return this->intersect_content(ray);
+    }
+
+    // NOTE this is naivly checking every child
+    Intersection* bestIntersection = nullptr;
+    for (unsigned long k = 0; k < this->child_count; k++) {
+        Intersection* intersection = this->children[k]->traverse(ray);
+        if(intersection != nullptr and (bestIntersection == nullptr or intersection->distance < bestIntersection->distance)){
+            bestIntersection = intersection;
+        }
+
+    }
+    return bestIntersection;
 }
 
 void SceneBVHNode::split(){
@@ -67,6 +90,24 @@ void SceneBVHNode::split(){
         }
         this->children.push_back(new SceneBVHNode(meshes_k));
     }
+}
+
+void SceneBVHNode::get_preview(std::vector<glm::vec3> *verts)
+{
+    aabb->get_preview(verts);
+
+    std::cout << "number of vertices before: " << verts->size() << std::endl;
+
+    if(this->is_leaf){
+        for (unsigned int i = 0; i < mesh_bvhs.size(); i++) {
+            mesh_bvhs[i]->get_preview(verts);
+        }
+    }else{
+        for (unsigned int i = 0; i < children.size(); ++i) {
+            children[i]->get_preview(verts);
+        }
+    }
+    std::cout << "number of vertices after: " << verts->size() << std::endl;
 }
 
 Intersection* SceneBVHNode::intersect_content(Ray* ray){
