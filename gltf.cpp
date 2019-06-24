@@ -87,8 +87,6 @@ Mesh* import_mesh(json node, json full){
 
     Mesh* obj = new Mesh(positions, faces, normals, mesh["name"], pos, rot, scale);
 
-    std::cout << mesh["name"]<<": " << faces.size() << std::endl;
-
     return obj;
 
 }

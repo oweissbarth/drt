@@ -18,7 +18,11 @@ Mesh::Mesh(std::vector<glm::vec3> vertices, std::vector<glm::uvec3> faces, std::
 
 
     this->color = glm::vec3(r,g,b);
+
+
+    std::cout << "mesh :"  << meshname << " color: " << glm::to_string(color) << std::endl;
 }
+
 
 void Mesh::intersect(Ray* ray, glm::vec3* intersection, glm::vec3* normal, bool* foundIntersection){
     float minDistance = 99999999.0f;
@@ -65,6 +69,18 @@ AABB Mesh::get_bounding_box()
     return AABB(positions);
 }
 
+AABB Mesh::get_world_bounding_box()
+{
+    std::vector<glm::vec3> world_positions(vertices.size());
+    std::vector<glm::vec3*> positions(vertices.size());
+    glm::mat4 matrix = get_matrix();
+    for (unsigned int i = 0; i < vertices.size(); i++) {
+        world_positions[i] = glm::vec3(matrix * glm::vec4(vertices[i], 1));
+        positions[i] = &world_positions[i];
+    }
+    return AABB(positions);
+}
+
 glm::mat4 Object::get_matrix()
 {
     glm::mat4 translation = glm::translate(this->location);
@@ -79,4 +95,13 @@ glm::mat4 Object::get_matrix()
     }else{
         return modelMatrix;
     }
+}
+
+glm::vec3 Mesh::get_mean()
+{
+    glm::vec3 mean;
+    for (unsigned int i = 0 ; i < vertices.size(); i++) {
+        mean += vertices[i];
+    }
+    return mean/static_cast<float>(vertices.size());
 }

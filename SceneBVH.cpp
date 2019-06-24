@@ -1,4 +1,6 @@
 #include "SceneBVH.h"
+#include "SceneBVHNode.h"
+
 
 SceneBVH::SceneBVH(Scene* scene)
 {
@@ -11,4 +13,8 @@ SceneBVH::SceneBVH(Scene* scene)
     }
 
     this->root = new SceneBVHNode(meshes);
+}
+
+Intersection* SceneBVH::traverse(Ray* ray){
+    return this->root->traverse(ray);
 }

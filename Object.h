@@ -20,6 +20,7 @@ public:
 
     glm::mat4 get_matrix();
 
+
     virtual ~Object() = default;
     std::string name;
     std::vector<Object*> children;
@@ -50,5 +51,9 @@ public:
     glm::vec3 color;
 
     AABB get_bounding_box();
+    AABB get_world_bounding_box();
+
+    glm::vec3 get_mean();
+
 
 };

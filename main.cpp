@@ -21,7 +21,7 @@ int main(){
     Renderer* renderer = new Renderer(scene, camera, 500, 500);
 
 
-    Preview p = Preview();
+    /*Preview p = Preview();
     //for (unsigned long i = 0; i < 1; i++) {
 
     for (unsigned long i = 0; i < scene->objects.size(); i++) {
@@ -30,12 +30,12 @@ int main(){
             p.add(mesh->get_preview());
             std::cout << mesh->name << std::endl;
         }
-    }
+    }*/
 
     //p.add(renderer->bvh->get_preview());
     renderer->render();
 
-    p.draw();
+    //p.draw();
 
 
 

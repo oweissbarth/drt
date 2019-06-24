@@ -7,5 +7,6 @@ class SceneBVH: public BVH
 {
 public:
     SceneBVH(Scene* scene);
+    Intersection* traverse(Ray* ray);
 };
 

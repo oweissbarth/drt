@@ -23,10 +23,9 @@ void Renderer::render(){
 
     Image* result = new Image(this->x_res, this->y_res);
 
-    glm::mat4 projection = glm::perspective(this->camera->fov*2, (float)this->x_res/(float)this->y_res, this->camera->near_clip, this->camera->far_clip);
+    glm::mat4 projection = glm::perspective(this->camera->fov, (float)this->x_res/(float)this->y_res, this->camera->near_clip, this->camera->far_clip);
 
     glm::mat4 view = glm::inverse(camera->get_matrix());
-    //glm::mat4 view = camera->get_matrix();
 
 	for(unsigned int i = 0; i < this->x_res*this->y_res; i++){
         unsigned int x = i%x_res;
@@ -45,7 +44,7 @@ void Renderer::render(){
 
         if(intersection != nullptr){
             float value = intersection->distance;
-            std::cout << value << std::endl;
+            //std::cout << value << std::endl;
             result->pixels[i] = glm::vec4(intersection->object->color, 1.0);
             //result->pixels[i] = glm::vec4(1.0, 0., 0., 1.0);
         }else{

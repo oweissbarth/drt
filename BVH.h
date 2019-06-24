@@ -9,6 +9,6 @@ class BVH
 public:
     virtual ~BVH() {}
     BVHNode* root;
-    Intersection* traverse(Ray* ray);
+    virtual Intersection* traverse(Ray* ray) = 0; // The ray is given in world space coordinates here
     PreviewLines* get_preview();
 };
