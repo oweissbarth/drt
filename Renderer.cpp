@@ -44,7 +44,7 @@ void Renderer::render(){
         Ray* ray = new Ray(this->camera->get_location(), glm::normalize(farPlanePos-nearPlanePos));
 
 
-        if( x % 20 == 0 && y % 20 == 0){
+        if( p && x % 20 == 0 && y % 20 == 0){
             std::cout << "Rendering " << i << "/" << this->x_res*this->y_res << "\r"<<std::flush;
             verts.push_back(ray->origin);
             verts.push_back(ray->origin + ray->direction*2000.f);
@@ -54,17 +54,26 @@ void Renderer::render(){
         Intersection* intersection = bvh->traverse(ray);
 
         if(intersection != nullptr){
-            float value = intersection->distance;
-            //std::cout << value << std::endl;
-            result->pixels[i] = glm::vec4(intersection->object->color, 1.0);
-            //result->pixels[i] = glm::vec4(1.0, 0., 0., 1.0);
+            Material* material = intersection->object->get_material(intersection->face_index);
+            std::cout << "face index: "<< intersection->face_index << std::endl;
+            glm::vec3 color;
+            if(material == nullptr){
+                color = glm::vec3(1., 0., 1.);
+            }else{
+               color = material->color;
+            }
+
+            result->pixels[i] = glm::vec4(color, 1.0);
         }else{
             result->pixels[i] = glm::vec4(0., 0., 0., 1.0);
         }
     }
     std::cout << "number of lines: " << verts.size()/2 << std::endl;
-    PreviewLines* raypreview = new PreviewLines(verts, glm::mat4(1));
-    //p->add(raypreview);
+    if(p){
+        PreviewLines* raypreview = new PreviewLines(verts, glm::mat4(1));
+        p->add(raypreview);
+    }
+
     result->save("/home/oliver/result.png");
 }
 

@@ -48,6 +48,10 @@ set(SOURCE_FILES
         utils.h
         Intersection.h
         Intersection.cpp
+	Material.cpp
+	Material.h
+	Mesh.cpp
+	Mesh.h
         )
 
 add_subdirectory(preview)

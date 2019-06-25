@@ -2,6 +2,7 @@
 
 #include "Scene.h"
 #include "Camera.h"
+#include "Mesh.h"
 #include <string>
 
 #include "json.hpp"
@@ -14,6 +15,7 @@ Scene* import_gltf(std::string path);
 Camera* import_camera(json node, json full);
 Mesh* import_mesh(json node, json full);
 Empty* import_empty(json node, json full);
+Material* import_material(unsigned id, json full);
 
 
 std::vector<Object*> import_nodes(std::vector<unsigned int> node_ids, json full);

@@ -33,12 +33,9 @@ MeshBVHNode::MeshBVHNode(std::vector<glm::uvec3> faces, std::vector<unsigned lon
 
 Intersection* MeshBVHNode::traverse(Ray* ray){
 
-    std::cout << "checking if we are hitting " << object->name << std::endl;
-
     if(!this->aabb->intersect(ray)){
         return nullptr;
     }
-    std::cout << "hit aabb of " << object->name << std::endl;
 
     if(this->is_leaf){
         return this->intersect_content(ray);

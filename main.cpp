@@ -20,14 +20,14 @@ int main(){
 
 
 
-    Preview p = Preview();
+    //Preview p = Preview();
 
-    Renderer* renderer = new Renderer(scene, camera, 500, 500, &p);
+    Renderer* renderer = new Renderer(scene, camera, 500, 500, nullptr);
 
 
     //for (unsigned long i = 0; i < 1; i++) {
 
-    for (unsigned long i = 0; i < scene->objects.size(); i++) {
+    /*for (unsigned long i = 0; i < scene->objects.size(); i++) {
         Mesh* mesh = dynamic_cast<Mesh*>(scene->objects[i]);
         if(mesh){
             p.add(mesh->get_preview());
@@ -37,10 +37,10 @@ int main(){
 
     p.add(camera->get_preview());
 
-    p.add(renderer->bvh->get_preview());
+    p.add(renderer->bvh->get_preview());*/
     renderer->render();
 
-    p.draw();
+    //p.draw();
 
 
 

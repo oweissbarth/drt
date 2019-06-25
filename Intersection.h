@@ -1,7 +1,7 @@
 #pragma once
 
 #include <glm/glm.hpp>
-#include "Object.h"
+#include "Mesh.h"
 
 class Intersection
 {

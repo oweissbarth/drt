@@ -6,6 +6,7 @@
 #include "base64.h"
 
 
+
 Mesh* import_mesh(json node, json full){
 
     glm::vec3 pos;
@@ -21,71 +22,96 @@ Mesh* import_mesh(json node, json full){
 
     std::vector<Mesh*> objects;
 
-    std::cout << "loading mesh " << node["name"] << std::endl;
     unsigned long mesh_index = node["mesh"];
 
 
     json mesh = meshes[mesh_index];
-    unsigned long position_i = mesh["primitives"][0]["attributes"]["POSITION"];
-    unsigned long normal_i = mesh["primitives"][0]["attributes"]["NORMAL"];
-    unsigned long face_i = mesh["primitives"][0]["indices"];
+
+    std::vector<glm::vec3> positions;
+    std::vector<glm::vec3> normals;
+    std::vector<glm::uvec3> faces;
+
+    std::vector<Material*> materials;
+
+    unsigned int face_offset = 0;
+    unsigned int positions_offset = 0;
+
+    for (unsigned int i = 0; i < mesh["primitives"].size(); ++i) {
+
+        unsigned long position_i = mesh["primitives"][i]["attributes"]["POSITION"];
+        unsigned long normal_i = mesh["primitives"][i]["attributes"]["NORMAL"];
+        unsigned long face_i = mesh["primitives"][i]["indices"];
 
 
-    json position_accessor = accessors[position_i];
-    json normal_accessor = accessors[normal_i];
-    json face_accessor = accessors[face_i];
+        json position_accessor = accessors[position_i];
+        json normal_accessor = accessors[normal_i];
+        json face_accessor = accessors[face_i];
 
 
-    json position_buffer_view = bufferviews[static_cast<unsigned long>(position_accessor["bufferView"])];
-    json normal_buffer_view = bufferviews[static_cast<unsigned long>(normal_accessor["bufferView"])];
-    json face_buffer_view = bufferviews[static_cast<unsigned long>(face_accessor["bufferView"])];
+        json position_buffer_view = bufferviews[static_cast<unsigned long>(position_accessor["bufferView"])];
+        json normal_buffer_view = bufferviews[static_cast<unsigned long>(normal_accessor["bufferView"])];
+        json face_buffer_view = bufferviews[static_cast<unsigned long>(face_accessor["bufferView"])];
 
-    unsigned long position_buffer_index = static_cast<unsigned long>(position_buffer_view["buffer"]);
-    unsigned long normal_buffer_index = static_cast<unsigned long>(normal_buffer_view["buffer"]);
-    unsigned long face_buffer_index = static_cast<unsigned long>(face_buffer_view["buffer"]);
+        unsigned long position_buffer_index = static_cast<unsigned long>(position_buffer_view["buffer"]);
+        unsigned long normal_buffer_index = static_cast<unsigned long>(normal_buffer_view["buffer"]);
+        unsigned long face_buffer_index = static_cast<unsigned long>(face_buffer_view["buffer"]);
 
-    json position_buffer = buffers[position_buffer_index];
-    json normal_buffer = buffers[normal_buffer_index];
+        json position_buffer = buffers[position_buffer_index];
+        json normal_buffer = buffers[normal_buffer_index];
 
-    unsigned long base64begin = std::string("data:application/octet-stream;base64,").size();
-    std::string base64data = static_cast<std::string>(position_buffer["uri"]).erase(0, base64begin);
+        unsigned long base64begin = std::string("data:application/octet-stream;base64,").size();
+        std::string base64data = static_cast<std::string>(position_buffer["uri"]).erase(0, base64begin);
 
-    std::string data;
-    data.resize(static_cast<unsigned long>(position_buffer["byteLength"]));
-    Base64::Decode(base64data, &data);
+        std::string data;
+        data.resize(static_cast<unsigned long>(position_buffer["byteLength"]));
+        Base64::Decode(base64data, &data);
 
-    unsigned long position_buffer_offset = position_buffer_view["byteOffset"];
-    unsigned long position_buffer_length = position_buffer_view["byteLength"];
-
-
-    const glm::vec3* position_bytes = reinterpret_cast<const glm::vec3*>(data.c_str()+position_buffer_offset);
-
-    std::vector<glm::vec3> positions(position_bytes, position_bytes + position_buffer_length/sizeof (glm::vec3));
+        unsigned long position_buffer_offset = position_buffer_view["byteOffset"];
+        unsigned long position_buffer_length = position_buffer_view["byteLength"];
 
 
-    unsigned long normal_buffer_offset = position_buffer_view["byteOffset"];
-    unsigned long normal_buffer_length = position_buffer_view["byteLength"];
-    const glm::vec3* normal_bytes = reinterpret_cast<const glm::vec3*>(data.c_str()+normal_buffer_offset);
+        const glm::vec3* position_bytes = reinterpret_cast<const glm::vec3*>(data.c_str()+position_buffer_offset);
 
-    std::vector<glm::vec3> normals(normal_bytes, normal_bytes + normal_buffer_length/sizeof (glm::vec3));
+        std::vector<glm::vec3> primitive_positions(position_bytes, position_bytes + position_buffer_length/sizeof (glm::vec3));
 
 
-    unsigned long face_buffer_offset = face_buffer_view["byteOffset"];
-    unsigned long face_buffer_length = face_buffer_view["byteLength"];
+        unsigned long normal_buffer_offset = position_buffer_view["byteOffset"];
+        unsigned long normal_buffer_length = position_buffer_view["byteLength"];
+        const glm::vec3* normal_bytes = reinterpret_cast<const glm::vec3*>(data.c_str()+normal_buffer_offset);
 
-    assert(face_buffer_index == position_buffer_index);
+        std::vector<glm::vec3> primitive_normals(normal_bytes, normal_bytes + normal_buffer_length/sizeof (glm::vec3));
 
-    const short* face_bytes = reinterpret_cast<const short*>(data.c_str()+face_buffer_offset);
 
-    unsigned long face_count = static_cast<unsigned long>(face_accessor["count"])/3;
+        unsigned long face_buffer_offset = face_buffer_view["byteOffset"];
+        unsigned long face_buffer_length = face_buffer_view["byteLength"];
 
-    std::vector<glm::uvec3> faces(face_count);
-    for(unsigned long i = 0; i < faces.size(); i++){
-        faces[i] = glm::uvec3(face_bytes[i*3], face_bytes[i*3+1], face_bytes[i*3+2]);
+        assert(face_buffer_index == position_buffer_index);
+
+        const short* face_bytes = reinterpret_cast<const short*>(data.c_str()+face_buffer_offset);
+
+        unsigned long face_count = static_cast<unsigned long>(face_accessor["count"])/3;
+
+        std::vector<glm::uvec3> primitive_faces(face_count);
+        for(unsigned long i = 0; i < primitive_faces.size(); i++){
+            primitive_faces[i] = glm::uvec3(face_bytes[i*3]+positions_offset, face_bytes[i*3+1]+positions_offset, face_bytes[i*3+2]+positions_offset);
+        }
+
+        positions.insert(positions.end(), primitive_positions.begin(), primitive_positions.end());
+        normals.insert(normals.end(), primitive_normals.begin(), primitive_normals.end());
+        faces.insert(faces.end(), primitive_faces.begin(), primitive_faces.end());
+
+        Material* material = import_material(mesh["primitives"][i]["material"], full);
+        material->start_index = face_offset;
+        materials.push_back(material);
+
+        face_offset += primitive_faces.size();
+        positions_offset += primitive_positions.size();
+
     }
 
-
     Mesh* obj = new Mesh(positions, faces, normals, mesh["name"], pos, rot, scale);
+
+    obj->materials = materials;
 
     return obj;
 
@@ -252,4 +278,26 @@ std::vector<unsigned int> get_child_nodes(json node)
     }
     return children;
 
+}
+
+Material *import_material(unsigned id, json full)
+{
+    json all_materials = full["materials"];
+
+    json material = all_materials[id];
+
+    glm::vec3 emissive = glm::vec3(0);
+    glm::vec3 color = glm::vec3(0);
+
+    if(material.contains("emissiveFactor")){
+        emissive = glm::vec3(material["emissiveFactor"][0], material["emissiveFactor"][1], material["emissiveFactor"][2]);
+    }
+
+    if(material.contains("pbrMetallicRoughness")){
+        if(material["pbrMetallicRoughness"].contains("baseColorFactor")){
+            color = glm::vec3(material["pbrMetallicRoughness"]["baseColorFactor"][0], material["pbrMetallicRoughness"]["baseColorFactor"][1], material["pbrMetallicRoughness"]["baseColorFactor"][2]);
+        }
+    }
+
+    return new Material(color, emissive);
 }
