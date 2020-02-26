@@ -68,7 +68,7 @@ void Renderer::render(){
                 }else{
                    color = material->color;
                    if(material->emissive != glm::vec3(0,0,0)){
-                       std::cout  << "hit light!" << std::endl;
+                       result->pixels[i] += glm::vec4(material->emissive, 1.0);
                    }
                 }
 
@@ -78,14 +78,14 @@ void Renderer::render(){
             }
         }
     }
-    std::cout << "number of lines: " << verts.size()/2 << std::endl;
+
     if(p){
         PreviewLines* raypreview = new PreviewLines(verts, glm::mat4(1));
         p->add(raypreview);
     }
 
-     result->scale_values(1.f/samples);
-    //result->tonemap();
+     //result->scale_values(1.f/samples);
+    result->tonemap();
 
     result->save("result.png");
 }

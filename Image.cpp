@@ -28,11 +28,19 @@ bool Image::save(std::string path){
 
 void Image::tonemap()
 {
-    float Lavg = 0;
+    float Lavg = 0.f;
+    int count = 0;
     for (unsigned int i = 0; i < pixels.size(); ++i) {
-        Lavg += log(luminance(pixels[i]));
+        float l = log(luminance(pixels[i]));
+        if(l > 0) {
+            Lavg += l;
+            count++;
+        }
+
     }
-    Lavg = exp(Lavg/pixels.size());
+
+    Lavg = exp(Lavg/count);
+    std::cout << "Average luminance: " << Lavg << std::endl;
 
 
     float lum_factor = 0.f;
