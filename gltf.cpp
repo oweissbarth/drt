@@ -75,8 +75,8 @@ Mesh* import_mesh(json node, json full){
         std::vector<glm::vec3> primitive_positions(position_bytes, position_bytes + position_buffer_length/sizeof (glm::vec3));
 
 
-        unsigned long normal_buffer_offset = position_buffer_view["byteOffset"];
-        unsigned long normal_buffer_length = position_buffer_view["byteLength"];
+        unsigned long normal_buffer_offset = normal_buffer_view["byteOffset"];
+        unsigned long normal_buffer_length = normal_buffer_view["byteLength"];
         const glm::vec3* normal_bytes = reinterpret_cast<const glm::vec3*>(data.c_str()+normal_buffer_offset);
 
         std::vector<glm::vec3> primitive_normals(normal_bytes, normal_bytes + normal_buffer_length/sizeof (glm::vec3));
