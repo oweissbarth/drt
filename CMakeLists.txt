@@ -12,6 +12,8 @@ find_package(glm REQUIRED)
 
 find_package(openshading )
 
+find_package(OpenMP)
+
 find_package(OpenImageIO REQUIRED)
 include_directories(${OPENIMAGEIO_INCLUDE_DIRS})
 link_directories(${OPENIMAGEIO_LIBRARIES})
@@ -58,5 +60,5 @@ add_subdirectory(preview)
 
 add_executable(drt ${SOURCE_FILES})
 
-target_link_libraries(drt ${GLM_LIBRARIES} ${OPENIMAGEIO_LIBRARIES} preview)
+target_link_libraries(drt ${GLM_LIBRARIES} ${OPENIMAGEIO_LIBRARIES} OpenMP::OpenMP_CXX preview)
 set_property(TARGET drt PROPERTY CXX_STANDARD 11)

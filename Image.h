@@ -12,4 +12,6 @@ public:
   std::vector<glm::vec4> pixels;
   Image(unsigned int width, unsigned int height);
   bool save(std::string path);
+  void tonemap();
+  void scale_values(float);
 };
