@@ -29,6 +29,20 @@ AABB::AABB(std::vector<glm::vec3*> points){
 
 }
 
+void AABB::ensure_non_zero(float epsilon){
+    if(this->min.x == this->max.x){
+        this->max.x += epsilon;
+    }
+
+    if(this->min.y == this->max.y){
+        this->max.y += epsilon;
+    }
+
+    if(this->min.z == this->max.z){
+        this->max.z += epsilon;
+    }
+}
+
 
 bool AABB::intersect(Ray* ray){
     float t1 = (this->min.x - ray->origin.x)*ray->inv_direction.x;

@@ -19,6 +19,7 @@ MeshBVHNode::MeshBVHNode(std::vector<glm::uvec3> faces, std::vector<unsigned lon
         positions[i*3+2] = &(this->object->vertices[this->faces[i].z]);
     }
     this->aabb = new AABB(positions);
+    this->aabb->ensure_non_zero();
 
     std::cout << object->name<<": " << glm::to_string(aabb->min) << ", " << glm::to_string(aabb->max) << std::endl;
 
