@@ -1,13 +1,16 @@
 #include "PreviewSolid.h"
+#include <iostream>
 
-PreviewSolid::PreviewSolid(std::vector<glm::vec3> verts, std::vector<glm::vec3> norms, glm::mat4 tranform, glm::vec3 color): PreviewObject()
+PreviewSolid::PreviewSolid(std::vector<glm::vec3> verts, std::vector<glm::vec3> norms, std::vector<glm::vec3> colors, glm::mat4 transform): PreviewObject()
 {
     this->vertices = verts;
     this->normals = norms;
-    this->modelMatrix = tranform;
-    this->color = color;
+    this->modelMatrix = transform;
+    this->colors = colors;
 
-    this->update_shader("simple");
+    std::cout << vertices.size() << ", "<< colors.size() << std::endl;
+
+    this->update_shader("phong");
     this->retrieve_locations();
     this->update_geometry();
 
@@ -30,8 +33,9 @@ void PreviewSolid::draw(glm::mat4 projection, glm::mat4 view){
     glUniformMatrix4fv(projection_location, 1, GL_FALSE, &projectionMatrix[0][0]);
     glUniformMatrix4fv(modelviewprojection_location, 1, GL_FALSE, &modelViewProjectionMatrix[0][0]);
     glUniformMatrix4fv(normal_location, 1, GL_FALSE, &normalMatrix[0][0]);
+    glUniformMatrix4fv(view_location, 1, GL_FALSE, &viewMatrix[0][0]);
 
-    glUniform3f(color_location, color.r, color.g, color.b);
+
     glBindVertexArray(VaoID);
     glDrawArrays(GL_TRIANGLES, 0 , buffer_size);
     glBindVertexArray(0);

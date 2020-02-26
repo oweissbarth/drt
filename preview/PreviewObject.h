@@ -14,11 +14,12 @@ public:
 
     std::vector<glm::vec3> vertices;
     std::vector<glm::vec3> normals;
+    std::vector<glm::vec3> colors;
 
 protected:
 
-    GLuint vertex_buffer, normal_buffer, vertex_shader, fragment_shader, program, VaoID;
-    GLint v_position_location, v_normal_location, modelview_location, projection_location, modelviewprojection_location, normal_location, color_location;
+    GLuint vertex_buffer, normal_buffer, color_buffer, vertex_shader, fragment_shader, program, VaoID;
+    GLint v_position_location, v_normal_location, v_color_location, modelview_location, view_location, projection_location, modelviewprojection_location, normal_location, color_location;
 
 
 

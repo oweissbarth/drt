@@ -40,6 +40,11 @@ void PreviewObject::update_shader(std::string name){
 
     glAttachShader(program, vertex_shader);
     glAttachShader(program, fragment_shader);
+
+    glBindAttribLocation(program, 0, "position");
+    glBindAttribLocation(program, 1, "normal");
+    glBindAttribLocation(program, 2, "vertexColor");
+
     glLinkProgram(program);
 
     this->check_linking_status(program);
@@ -96,6 +101,16 @@ void PreviewObject::update_geometry(){
         glEnableVertexAttribArray(v_normal_location);
         glVertexAttribPointer(v_normal_location, 3, GL_FLOAT, GL_FALSE, sizeof(normals[0]), NULL);
     }
+
+    if(colors.size() > 0){
+        glGenBuffers(1, &color_buffer);
+        glBindBuffer(GL_ARRAY_BUFFER, color_buffer);
+        glBufferData(GL_ARRAY_BUFFER, sizeof(float)*colors.size()*3, colors.data(), GL_STATIC_DRAW);
+
+        glEnableVertexAttribArray(v_color_location);
+        glVertexAttribPointer(v_color_location, 3, GL_FLOAT, GL_FALSE, sizeof(colors[0]), NULL);
+
+    }
     glBindVertexArray(0);
 
 }
@@ -104,12 +119,17 @@ void PreviewObject::retrieve_locations(){
     modelview_location = glGetUniformLocation(program, "modelview_mat");
     projection_location = glGetUniformLocation(program, "projection_mat");
     modelviewprojection_location = glGetUniformLocation(program, "modelviewprojection_mat");
+    view_location = glGetUniformLocation(program, "view_mat");
     normal_location = glGetUniformLocation(program, "normal_mat");
     color_location = glGetUniformLocation(program, "color");
 
 
     v_position_location = glGetAttribLocation(program, "position");
     v_normal_location = glGetAttribLocation(program, "normal");
+    v_color_location = glGetAttribLocation(program, "vertexColor");
+
+    std::cout << v_position_location <<"," << v_normal_location << ", "<< v_color_location <<std::endl;
+
 
 
 

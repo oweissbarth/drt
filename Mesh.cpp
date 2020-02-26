@@ -47,6 +47,14 @@ void Mesh::intersect(Ray* ray, glm::vec3* intersection, glm::vec3* normal, bool*
 
 PreviewSolid* Mesh::get_preview(){
     std::vector<glm::vec3> verts(faces.size()*3);
+    std::vector<glm::vec3> nrms(faces.size()*3);
+    std::vector<glm::vec3> colors(faces.size()*3);
+
+    int material = 0;
+    std::cout << this->name << std::endl;
+    for(int j = 0; j < this->materials.size(); j++){
+        std::cout << this->materials[j]->start_index<<":"<< this->materials[j]->color.r << ", "<< this->materials[j]->color.g<<", " << this->materials[j]->color.b <<std::endl;
+    }
 
     for(unsigned int i = 0; i < faces.size(); i++){
 
@@ -54,8 +62,20 @@ PreviewSolid* Mesh::get_preview(){
         verts[i*3+1] = this->vertices[faces[i].y];
         verts[i*3+2] = this->vertices[faces[i].z];
 
+        nrms[i*3] = this->normals[faces[i].x];
+        nrms[i*3+1] = this->normals[faces[i].y];
+        nrms[i*3+2] = this->normals[faces[i].z];
+
+        if(material+1 < this->materials.size() && i == this->materials[material+1]->start_index){
+            material++;
+        }
+        std::cout << i << ", " << material << std::endl;
+        colors[i*3] = this->materials[material]->color;
+        colors[i*3+1] = this->materials[material]->color;
+        colors[i*3+2] = this->materials[material]->color;
     }
-    return new PreviewSolid(verts, normals, get_matrix(), materials[0]->color);
+
+    return new PreviewSolid(verts, nrms, colors, get_matrix());
 }
 
 AABB Mesh::get_bounding_box()
