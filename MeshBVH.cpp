@@ -17,7 +17,6 @@ MeshBVH::MeshBVH(Mesh* mesh)
     glm::mat4 rotation = glm::toMat4(mesh->rotation);
     glm::mat4 scale = glm::diagonal4x3(mesh->scale);
     this->transform = translation * rotation * scale;
-    //this->inv_transform = glm::inverse(glm::transpose(this->transform));
     this->inv_transform = glm::inverse(this->transform);
 
     this->mesh = mesh;
