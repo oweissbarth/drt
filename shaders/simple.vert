@@ -14,9 +14,9 @@ uniform mat4 modelviewprojection_mat;
 uniform mat4 normal_mat;
 
 void main() {
-    vec3 ambientLight = vec3(0.6, 0.6, 0.6);
-    vec3 directionalLightColor = vec3(0.5, 0.5, 0.5);
-    vec3 directionalVector = vec3(300, 300, 300);
+    vec3 ambientLight = vec3(0.5, 0.5, 0.5);
+    vec3 directionalLightColor = vec3(0.3, 0.3, 0.3);
+    vec3 directionalVector = vec3(0.612, 0.57, 0.54);
 
     vec4 transformedNormal = normal_mat * vec4(normal, 1.0);
 
